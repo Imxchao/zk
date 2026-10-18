@@ -23,6 +23,9 @@
 
     哈夫曼树有 \(n\) 个叶结点，就有 \(n-1\) 个分支结点
 
+3. 已知二叉树T的前序遍历序列为a,b,c,d,e，则前序遍历序列与T相同的不同二叉树个数（不包含T）是（ <span style="color:#d94437">13</span> ）。
+
+    这图我实在画不出来
 
 ## 填空题
 
@@ -60,6 +63,37 @@
 
 17. 对n个数据元素的线性表进行希尔排序时，初始增量s（s是整数）的取值范围是<span style="color:#d94437">1≤s<n</span>
 
+18. 数据的运算是定义在数据的<span style="color:#d94437">逻辑</span>结构上的
+
+19. 图G的遍历过程实际上是对每个顶点搜索其<span style="color:#d94437">邻接点</span>的过程
+
+20. 将森林T转换为一棵二叉树T1，则T中叶子结点在T1中满足的条件为<span style="color:#d94437">无左孩子</span>
+
+21. 假设顺序存储的有序表R含有13个关键字，进行二分查找时，查找成功时平均查找长度为<span style="color:#d94437">41/13</span>
+    对于含有 13 个关键字的有序表，判定树的结点分布如下：
+    - 第 1 层（根结点）：$1$ 个结点，查找长度为 $1$
+    - 第 2 层：$2$ 个结点，查找长度为 $2$
+    - 第 3 层：$4$ 个结点，查找长度为 $3$
+    - 第 4 层：$13 - 1 - 2 - 4 = 6$ 个结点，查找长度为 $4$
+
+    公式计算
+
+    查找成功时的平均查找长度 $\text{ASL}_{\text{success}}$ 计算公式为：
+
+    $$
+    \text{ASL}_{\text{success}}=\frac{1}{n}\sum_{i=1}^{h}(\text{第 }i\text{ 层的结点数}\times i)
+    $$
+
+    将数据代入：
+
+    $$
+    \begin{aligned}
+    \text{ASL}_{\text{success}}
+    &=\frac{1\times 1+2\times 2+4\times 3+6\times 4}{13}\\
+    &=\frac{1+4+12+24}{13}\\
+    &=\frac{41}{13}\approx 3.15
+    \end{aligned}
+    $$
 ## 名词解释
 
 
@@ -345,25 +379,7 @@ SeqStack S;
 
 
 
-## 算法设计 1
-
-### 原题
-
-设循环队列保存在数组Q[N]中，front和rear分别为队头和队尾指针，初始时front=rear=0，约定指针rear指向的单元始终为空，请用C语言分别描述下列操作：
-
-（1）将数据元素x入队。  
-（2）将队首元素出队，并保存到变量myData中。
-（3）计算队列中当前数据元素的个数，并保存到变量DLenth中。
-
-### 思路
-
-
-### 解答
-
----
-
-
-## 算法设计 1
+## 算法设计
 
 ### 原题
 
@@ -401,8 +417,6 @@ int f34(BinTree Bt) {
 
 ---
 
-
-## 算法设计 1
 
 ### 原题
 
@@ -513,3 +527,95 @@ int f34(SeqList R, int n)
 
 ---
 
+
+### 原题
+
+单链表类型定义如下：
+
+```c
+typedef struct node{
+    int data;
+    struct node *next;
+}ListNode;
+
+typedef ListNode *LinkList;
+```
+
+请编写一个函数，删除非空的带头结点单链表L中的最小值。函数的原型如下：
+
+```c
+void f34(LinkList L);
+```
+
+### 解答
+
+```c
+void f34(LinkList L)
+{
+    ListNode *prev, *curr;
+    ListNode *min, *minprev;
+
+    if (L == NULL || L->next == NULL)
+        return;
+
+    min = L->next;
+    minprev = L;
+    prev = L->next;
+    curr = prev->next;
+
+    while (curr != NULL) {
+        if (curr->data < min->data) {
+            min = curr;
+            minprev = prev;
+        }
+
+        prev = curr;
+        curr = curr->next;
+    }
+
+    minprev->next = min->next;
+    free(min);
+}
+```
+
+
+---
+
+
+### 原题
+
+
+设顺序表L按升序排列，请编写函数f34()，要求用二分查找确定插入位置，将元素x插入到L中，使L保持有序。
+
+函数f34()的原型为：void f34(SeqList*L,DataType x)
+
+### 解答
+
+```c
+void f34(SeqList *L, DataType x)
+{
+    int low = 0;
+    int high = L->length - 1;
+    int mid, i;
+
+    /* 二分查找插入位置 */
+    while (low <= high) {
+        mid = (low + high) / 2;
+
+        if (L->data[mid] < x)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+
+    /* 元素后移 */
+    for (i = L->length - 1; i >= low; i--)
+        L->data[i + 1] = L->data[i];
+
+    /* 插入 x */
+    L->data[low] = x;
+    L->length++;
+}
+```
+
+---
