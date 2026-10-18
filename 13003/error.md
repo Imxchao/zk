@@ -1,5 +1,29 @@
 # Learning Log
 
+![alt text](308d714b7b68df9d4a4e155fe816195c.jpg)
+
+## 选择题
+
+1. 有5个分支结点的完全二叉树，其叶结点的个数只能是（<span style="color:#d94437">5 或 6</span>）
+
+    对任意二叉树，设：
+    - $n_0$：叶结点数（度为 0）
+    - $n_1$：只有一个孩子的结点数（度为 1）
+    - $n_2$：有两个孩子的结点数（度为 2）
+    二叉树有一个重要关系：
+    $$n_0=n_2+1$$
+
+    题目说的“分支结点”是指非叶结点，所以分支结点总数是 $n_1+n_2=5$
+
+    完全二叉树还有一个特点：最多只有一个结点有一个孩子，因此 $n_1$ 只能是 0 或 1。
+    - 若 $n_1=0$，那么 $n_2=5$，叶结点数 $n_0=6$。
+    - 若 $n_1=1$，那么 $n_2=4$，叶结点数 $n_0=5$。
+
+2. 构造一棵含5个叶结点的哈夫曼树，需要确定的分支结点个数是（<span style="color:#d94437">4</span>）
+
+    哈夫曼树有 \(n\) 个叶结点，就有 \(n-1\) 个分支结点
+
+
 ## 填空题
 
 1. 算法必须满足的五个准则是:<span style="color:#d94437">输入</span>、<span style="color:#d94437">输出</span>、<span style="color:#d94437">有穷性</span>、<span style="color:#d94437">确定性</span>和<span style="color:#d94437">可行性</span>
@@ -34,6 +58,8 @@
 
 16. 循环队列保存在长度为M的数组中，队头为front，队尾为rear，若要求队满时条件为真，则条件表达式应是<span style="color:#d94437">(rear + 1)%M == front</span>
 
+17. 对n个数据元素的线性表进行希尔排序时，初始增量s（s是整数）的取值范围是<span style="color:#d94437">1≤s<n</span>
+
 ## 名词解释
 
 
@@ -67,6 +93,11 @@
 ②操作原则不同:栈遵循“后进先出(LIFO)”;队列遵循“先进先出(FIFO)”;  
 ③应用场景不同:栈用于函数调用、表达式求值、回溯;队列用于层序遍历、任务调度、缓冲处理。
 
+### 简述图的深度优先搜索(DFS)和广度优先搜索(BFS)的核心思想
+
+**DFS核心思想**:从起始顶点出发,优先沿当前顶点的邻接顶点深度遍历(尽可能往“深”走),当无法继续深入时,回溯到上一顶点,选择未访问的邻接顶点继续遍历,直至所有顶点访问完毕。通常借助栈实现。
+**BFS核心思想**: 从图中任意指定的起始顶点V开始，访问顶点V，然后访问与V相邻接的思普屁尚未被访问过的顶点，之后再依次访问与这些新近被访问过的那些顶点相邻接的尚未被访问的顶点
+
 ## 问答题
 
 ### 题1
@@ -76,6 +107,34 @@
 
 （1）给出构造的哈夫曼树。  
 （2）给出各字符的哈夫曼编码。
+
+### 题2
+
+设循环队列保存在数组Q[N]中，front和rear分别为队头和队尾指针，初始时front=rear=0，约定指针rear指向的单元始终为空，请用C语言分别描述下列操作：
+
+（1）将数据元素x入队。  
+（2）将队首元素出队，并保存到变量myData中。  
+（3）计算队列中当前数据元素的个数，并保存到变量DLenth中。
+
+
+### 题3
+
+己知稀疏矩阵M如下，采用三元组表存储。
+
+![alt text](image-2.png)
+
+（1）请给出三元组表的类型定义。  
+（2）写出矩阵M按列优先存储的三元组表。
+
+
+### 题4
+
+将百分制成绩分成五个等级，已知成绩的对应关系及分布情况如下表所示。请回答下列问题。
+
+![alt text](image-3.png)
+
+（1）根据哈夫曼树的基本原理，画出成绩评定判定树T。  
+（2）求树T的WPL。
 
 ## 算法阅读 1
 
@@ -302,3 +361,155 @@ SeqStack S;
 ### 解答
 
 ---
+
+
+## 算法设计 1
+
+### 原题
+
+二叉树的二叉链表类型定义如下:
+
+```c
+typedef struct node{
+    int data;
+    struct node *lchild,*rchild;
+}BinNode;
+
+typedef BinNode *BinTree;
+```
+
+编写函数f34(BinTree Bt),返回二叉树Bt中数据元素的最大值。  
+函数的原型为:int f34(BinTree Bt)。
+
+
+```c
+int f34(BinTree Bt) {
+    int max, lval, rval;
+
+    if (Bt == NULL) {
+        return MIN;
+    }
+
+    lval = f34(Bt->lchild);
+    rval = f34(Bt->rchild);
+    
+    max = (lval > rval) ? lval : rval;
+
+    return (Bt->data > max) ? Bt->data : max;
+}
+```
+
+---
+
+
+## 算法设计 1
+
+### 原题
+
+已知顺序表SeqList定义如下：
+
+```c
+typedef struct{
+    KeyType key;
+    //InfoType otherinfo;
+}RecType;
+typedef RecType SeqList[MAXSIZE+1];
+```
+
+
+编写函数int f34(SeqList R,int n)，用双向冒泡排序法将n个元素的待排序列R按关键字降序排序，第1趟将最大元素排在数组下标为0的位置，第2趟将最小元素排在数组下标为n-1的位置，……，依此类推，最后1趟将中间排序码排在R的中心位置。
+
+### 思路
+
+> **← 第一个循环：最大值往左**
+>
+> `i` 从 `right` 递减到 `left + 1`。
+>
+> 如果 `R[i].key > R[i-1].key`，就交换，让较大的值往左移动。
+>
+> ---
+>
+> **→ 第二个循环：最小值往右**
+>
+> `i` 从 `left` 递增到 `right - 1`。
+>
+> 如果 `R[i].key < R[i+1].key`，就交换，让较小的值往右移动。
+>
+> **记忆口诀：最大往左，逆向扫；最小往右，正向扫。**
+
+### 解答
+
+```c
+// 降序
+int f34(SeqList R, int n)
+{
+    int left = 0, right = n - 1, i;
+    RecType temp;
+
+    while (left < right) {
+        /* 从右向左：最大值移到左边 */
+        for (i = right; i > left; i--) {
+            if (R[i].key > R[i - 1].key) {
+                temp = R[i];
+                R[i] = R[i - 1];
+                R[i - 1] = temp;
+            }
+        }
+        left++;
+
+        if (left >= right)
+            break;
+
+        /* 从左向右：最小值移到右边 */
+        for (i = left; i < right; i++) {
+            if (R[i].key < R[i + 1].key) {
+                temp = R[i];
+                R[i] = R[i + 1];
+                R[i + 1] = temp;
+            }
+        }
+        right--;
+    }
+
+    return 0;
+}
+```
+
+```c
+// 升序
+int f34(SeqList R, int n)
+{
+    int left = 0, right = n - 1, i;
+    RecType temp;
+
+    while (left < right) {
+        /* 从右向左：最小值移到左边 */
+        for (i = right; i > left; i--) {
+            if (R[i].key < R[i - 1].key) {
+                temp = R[i];
+                R[i] = R[i - 1];
+                R[i - 1] = temp;
+            }
+        }
+        left++;
+
+        if (left >= right)
+            break;
+
+        /* 从左向右：最大值移到右边 */
+        for (i = left; i < right; i++) {
+            if (R[i].key > R[i + 1].key) {
+                temp = R[i];
+                R[i] = R[i + 1];
+                R[i + 1] = temp;
+            }
+        }
+        right--;
+    }
+
+    return 0;
+}
+```
+
+---
+
